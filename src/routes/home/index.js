@@ -3,8 +3,8 @@ import style from './style';
 
 const Home = () => (
   <div class={style.home}>
-    <h1>Home</h1>
-    <p>This is the Home component.</p>
+    <h1>Strætó eða hopp</h1>
+    <p>Sjáðu hvernig veðrar í leiðinni.</p>
   </div>
 );
 
