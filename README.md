@@ -1,3 +1,5 @@
+[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/tvingmark/start)
+
 ![Preact Logo](https://github.com/vercel/vercel/blob/master/packages/frameworks/logos/preact.svg)
 
 # Preact Example
