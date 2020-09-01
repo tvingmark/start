@@ -8,6 +8,7 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import '../style/index.css';
 import route from '../data/long-route';
+import hopp from '../data/hopp'
 
 const getRouteConfig = (hash) => {
   switch (hash) {
@@ -42,11 +43,13 @@ const getRouteConfig = (hash) => {
       };
     default:
       return {
-        mapCenter: [59.3367, 18.0667],
+        mapCenter: [64.122136, -21.872780],
         markerCluster: false,
-        markers: [],
+        markers: hopp.data.bikes.map(function (bike) {
+            return [bike.lat, bike.lon]
+        }),     
         polylines: [],
-        zoom: 10,
+        zoom: 13,
       };
   }
 };
@@ -55,8 +58,11 @@ const getRouteConfig = (hash) => {
 export default class Leaf extends Component {
   constructor(props) {
     super(props);
-    console.log(window.location.hash)
     this.state = getRouteConfig("#simple");
+    // console.dir(hopp.data.bikes.map(bike => return [bike.lat, bike.lon]),
+    console.dir(hopp.data.bikes.map(function (bike) {
+        return [bike.lat, bike.lon]
+    }))
   }
 
   componentDidMount() {
@@ -71,24 +77,12 @@ export default class Leaf extends Component {
     return (
       <Fragment>
         <header>
-          <h1>Stopp.app</h1>
-          <h4>Strætó eða Hopp</h4>
-          <ul className="menu">
-            {[
-              { link: '#simple', title: 'Simple' },
-              { link: '#cluster', title: 'Cluster' },
-              { link: '#polyline', title: 'Polyline and markers' },
-            ].map(({ link, title }) => (
-              <li className={window.location.hash === link ? 'active' : ''}>
-                <a href={link}>{title}</a>
-              </li>
-            ))}
-          </ul>
+          <h5>Stopp.app</h5>
         </header>
         <Map center={mapCenter} style={{ height: '100%' }} zoom={zoom}>
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           {markers.map(position => (
-            <Marker icon={divIcon()} position={position} />
+            <Marker icon={divIcon({className: 'my-div-icon'})} position={position} />
           ))}
           {polylines.map(positions => (
             <Polyline positions={positions} />

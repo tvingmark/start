@@ -11,7 +11,7 @@ a {
 
 header {
   top: 0;
-  height: 15vh;
+  height: 5vh;
   position: relative;
 }
 
@@ -52,7 +52,7 @@ ul.menu li a {
 }
 
 .leaflet-container {
-  height: 85vh !important;
+  height: 95vh !important;
 }
 
 .leaflet-div-icon {
