@@ -82,7 +82,7 @@ export default class Leaf extends Component {
         <Map center={mapCenter} style={{ height: '100%' }} zoom={zoom}>
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           {markers.map(position => (
-            <Marker icon={divIcon({className: 'my-div-icon'})} position={position} />
+            <Marker icon={divIcon()} position={position} />
           ))}
           {polylines.map(positions => (
             <Polyline positions={positions} />
