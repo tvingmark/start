@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "preact",
+  "name": "Stopp.app",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
@@ -19,12 +19,15 @@
     "identity-obj-proxy": "^3.0.0",
     "jest": "^21.2.1",
     "per-env": "^1.0.2",
-    "preact-cli": "^3.0.0"
+    "preact-cli": "^3.0.0",
+    "worker-loader": "^3.0.2"
   },
   "dependencies": {
+    "comlink": "^4.3.0",
     "leaflet": "1.6.0",
     "leaflet.markercluster": "^1.4.1",
-    "preact": "10.4.8"
+    "preact": "10.4.8",
+    "worker-plugin": "^5.0.0"
   },
   "jest": {
     "verbose": true,

@@ -7,8 +7,16 @@ import {
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import '../style/index.css';
+
+import { StoppIcon } from '../assets/svg'
+import WorkerFetch from '../data/fetch.worker'
+
 import route from '../data/long-route';
 import hopp from '../data/hopp'
+import hopp02 from '../data/hopp02'
+
+import { wrap } from 'comlink'
+
 
 const getRouteConfig = (hash) => {
   switch (hash) {
@@ -49,11 +57,22 @@ const getRouteConfig = (hash) => {
             return [bike.lat, bike.lon]
         }),     
         polylines: [],
-        zoom: 13,
+        zoom: 14,
       };
   }
 };
 
+const zoomToLocation = (location) => {
+
+}
+
+async function wwinit(){
+    const worker = new WorkerFetch()
+    const obj = wrap(worker)
+    alert(`Counter: ${await obj.counter}`);
+    await obj.inc()
+    alert(`Counter: ${await obj.counter}`);
+}
 
 export default class Leaf extends Component {
   constructor(props) {
@@ -63,6 +82,8 @@ export default class Leaf extends Component {
     console.dir(hopp.data.bikes.map(function (bike) {
         return [bike.lat, bike.lon]
     }))
+    wwinit()
+
   }
 
   componentDidMount() {
@@ -75,10 +96,26 @@ export default class Leaf extends Component {
     mapCenter, markerCluster, markers, polylines, zoom,
   }) {
     return (
-      <Fragment>
-        <header>
-          <h5>Stopp.app</h5>
-        </header>
+      <div className="leaf">
+        <div
+            style={{
+                position: 'absolute',
+                top: 0,
+                background: 'white',
+                display: 'flex',
+                justifyContent: 'center',
+                alignContent: 'center',
+                padding: '15px 0px',
+                width: '100%',
+                zIndex: 5000
+                
+            }}>
+            <StoppIcon
+                style={{
+                    height: '55px'
+                }}    
+            />
+        </div>
         <Map center={mapCenter} style={{ height: '100%' }} zoom={zoom}>
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           {markers.map(position => (
@@ -95,7 +132,7 @@ export default class Leaf extends Component {
             </MarkerCluster>
           )}
         </Map>
-      </Fragment>
+      </div>
     );
   }
 }
