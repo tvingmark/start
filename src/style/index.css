@@ -32,6 +32,11 @@ ul.menu {
   width: 100%;
   text-align: center;
 }
+.app {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
 
 ul.menu li {
   display: table-cell;
@@ -52,9 +57,30 @@ ul.menu li a {
 }
 
 .leaflet-container {
-  height: 95vh !important;
+  height: 100vh !important;
 }
 
 .leaflet-div-icon {
   border-radius: 50%;
+}
+
+.leaflet-div-icon {
+    background: #E9BEE4 !important;
+    border: 1px solid #db9ab8 !important;
+    z-index: 100000000;
+}
+
+.leaflet-pane.leaflet-tile-pane {
+    filter: grayscale(1);
+}
+
+@media (min-width : 770px) {
+    .leaflet-container {
+        border: 3px solid;
+        border-radius: 5px;
+    }
+}
+
+.leaf {
+    position: relative;
 }
