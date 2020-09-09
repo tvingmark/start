@@ -11,55 +11,58 @@ import '../style/index.css';
 import { StoppIcon } from '../assets/svg'
 import WorkerFetch from '../data/fetch.worker'
 
+import DigitalClock from '../components/clock'
+import WindowWidth from '../components/wwidth'
+
 import route from '../data/long-route';
-import hopp from '../data/hopp'
+import hopp01 from '../data/hopp'
 import hopp02 from '../data/hopp02'
+import hopp03 from '../data/hopp03'
+import hopp04 from '../data/hopp04'
+import bus01 from '../data/bus01'
+import bus02 from '../data/bus02'
+import bus03 from '../data/bus03'
+import bus04 from '../data/bus04'
 
 import { wrap } from 'comlink'
 
 
-const getRouteConfig = (hash) => {
-  switch (hash) {
-    case '#cluster':
-      return {
-        mapCenter: [63.83919, 20.15069],
-        markerCluster: [
-          [63.8374896962485, 20.163206074534],
-          [63.9374896962485, 20.163206074534],
-          [63.7374896962485, 20.163206074534],
-          [63.8574896962485, 20.163206074534],
-          [63.8174896962485, 20.163206074534],
-          [63.8274896962485, 20.163206074534],
-          [63.8974896962485, 20.163206074534],
-        ],
-        markers: [],
-        polylines: [],
-        zoom: 8,
-      };
-    case '#polyline':
-      return {
-        mapCenter: [63.83919, 20.15069],
-        markerCluster: false,
-        markers: [
-          [59.3367, 18.0667],
-          [63.8374896962485, 20.163206074534],
-        ],
-        polylines: [
-          route,
-        ],
-        zoom: 5,
-      };
-    default:
+const getRouteConfig = () => {
+      const number = Math.floor(Math.random() * 4);
+      let hoppbikes, bus;
+      switch (number) {
+          case 1:
+              hoppbikes = hopp02
+              bus = bus02
+              break;
+          case 2:
+              hoppbikes = hopp03
+              bus = bus03
+              break;
+          case 3:
+              hoppbikes = hopp04
+              bus = bus04
+              break;
+          default:
+              console.log('Hoppipolla')
+              hoppbikes = hopp01
+              bus = bus01
+              break;
+      }
+      console.log(number)
+
       return {
         mapCenter: [64.122136, -21.872780],
         markerCluster: false,
-        markers: hopp.data.bikes.map(function (bike) {
+        markers: hoppbikes.data.bikes.map(function (bike) {
             return [bike.lat, bike.lon]
-        }),     
+        }),
+        busmarkers: bus.positions.map(function (bus){
+            return [bus.lat, bus.lon]
+        }),
         polylines: [],
-        zoom: 14,
+        zoom: 12,
       };
-  }
 };
 
 const zoomToLocation = (location) => {
@@ -69,32 +72,40 @@ const zoomToLocation = (location) => {
 async function wwinit(){
     const worker = new WorkerFetch()
     const obj = wrap(worker)
-    alert(`Counter: ${await obj.counter}`);
+    console.log(`Counter: ${await obj.counter}`);
     await obj.inc()
-    alert(`Counter: ${await obj.counter}`);
+    await obj.data()
+    console.log(`Counter: ${await obj.counter}`);
 }
 
 export default class Leaf extends Component {
   constructor(props) {
     super(props);
-    this.state = getRouteConfig("#simple");
+    this.state = getRouteConfig();
     // console.dir(hopp.data.bikes.map(bike => return [bike.lat, bike.lon]),
-    console.dir(hopp.data.bikes.map(function (bike) {
-        return [bike.lat, bike.lon]
-    }))
-    wwinit()
-
+    // console.dir(hopp.data.bikes.map(function (bike) {
+    //     return [bike.lat, bike.lon]
+    // }))
   }
 
+  // Called just before our component will be destroyed
+  componentWillUnmount() {
+    // stop when not renderable
+    clearInterval(this.timer);
+  }  
+
   componentDidMount() {
-    window.addEventListener('popstate', () => {
-      this.setState(getRouteConfig(window.location.hash));
-    });
+    wwinit()
+    this.timer = setInterval(() => {
+      this.setState(getRouteConfig());
+    }, 1000);    
   }
   
   render({}, {
-    mapCenter, markerCluster, markers, polylines, zoom,
+    mapCenter, markerCluster, markers, busmarkers, polylines, zoom,
   }) {
+
+    console.dir(busmarkers)
     return (
       <div className="leaf">
         <div
@@ -103,23 +114,29 @@ export default class Leaf extends Component {
                 top: 0,
                 background: 'white',
                 display: 'flex',
-                justifyContent: 'center',
-                alignContent: 'center',
-                padding: '15px 0px',
+                justifyContent: 'space-around',
+                alignItems: 'center',
+                paddingTop: '5px',
                 width: '100%',
                 zIndex: 5000
                 
             }}>
             <StoppIcon
+                onClick={() => this.setState(getRouteConfig())}
                 style={{
                     height: '55px'
                 }}    
             />
+            <span><DigitalClock / ></span>
         </div>
+        <WindowWidth />
         <Map center={mapCenter} style={{ height: '100%' }} zoom={zoom}>
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           {markers.map(position => (
-            <Marker icon={divIcon()} position={position} />
+            <Marker key={position.lat}icon={divIcon()} position={position} />
+          ))}
+          {busmarkers.map(position => (
+            <Marker key={position.lat} icon={divIcon({className: 'leaflet-div-icon bus-div-icon', html: 'bus'})} position={position} />
           ))}
           {polylines.map(positions => (
             <Polyline positions={positions} />

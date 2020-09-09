@@ -21,3 +21,10 @@ To get started with Preact for deployment with Vercel, you can use the [Preact C
 ```shell
 $ preact create default my-project
 ```
+
+
+### Todo
+
+- Add axios
+- Learn FOAM for every repo.
+- å

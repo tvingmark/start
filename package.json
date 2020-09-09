@@ -27,6 +27,7 @@
     "leaflet": "1.6.0",
     "leaflet.markercluster": "^1.4.1",
     "preact": "10.4.8",
+    "redaxios": "^0.3.0",
     "worker-plugin": "^5.0.0"
   },
   "jest": {
