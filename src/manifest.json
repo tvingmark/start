@@ -1,6 +1,6 @@
 {
-  "name": "preact",
-  "short_name": "preact",
+  "name": "Stopp.app",
+  "short_name": "stopp",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
