@@ -13,6 +13,7 @@ import WorkerFetch from '../data/fetch.worker'
 
 import DigitalClock from '../components/clock'
 import WindowWidth from '../components/wwidth'
+import BusMarker from '../components/Markers/'
 
 import route from '../data/long-route';
 import hopp01 from '../data/hopp'
@@ -23,42 +24,50 @@ import bus01 from '../data/bus01'
 import bus02 from '../data/bus02'
 import bus03 from '../data/bus03'
 import bus04 from '../data/bus04'
+import wind01 from '../data/wind01'
+import wind02 from '../data/wind02'
 
 import { wrap } from 'comlink'
 
 
 const getRouteConfig = () => {
       const number = Math.floor(Math.random() * 4);
-      let hoppbikes, bus;
+      let hoppbikes, bus, windbikes;
+
       switch (number) {
           case 1:
               hoppbikes = hopp02
               bus = bus02
+              windbikes = wind01
               break;
           case 2:
               hoppbikes = hopp03
               bus = bus03
+              windbikes = wind02
               break;
           case 3:
               hoppbikes = hopp04
+              windbikes = wind01
               bus = bus04
               break;
           default:
               console.log('Hoppipolla')
               hoppbikes = hopp01
               bus = bus01
+              windbikes = wind02
               break;
       }
-      console.log(number)
-
       return {
         mapCenter: [64.122136, -21.872780],
         markerCluster: false,
         markers: hoppbikes.data.bikes.map(function (bike) {
-            return [bike.lat, bike.lon]
+            return {num: bike.bike_id+bike.lon, pos: [bike.lat, bike.lon]}
         }),
         busmarkers: bus.positions.map(function (bus){
-            return [bus.lat, bus.lon]
+            return {num: bus.route+bus.gpsTime, pos: [bus.lat, bus.lon]}
+        }),
+        windmarkers: windbikes.items.map(function(bike){
+            return {num: bike.boardNo, pos: [bike.latitude, bike.longitude]}
         }),
         polylines: [],
         zoom: 12,
@@ -102,10 +111,8 @@ export default class Leaf extends Component {
   }
   
   render({}, {
-    mapCenter, markerCluster, markers, busmarkers, polylines, zoom,
+    mapCenter, markerCluster, markers, busmarkers, windmarkers, polylines, zoom,
   }) {
-
-    console.dir(busmarkers)
     return (
       <div className="leaf">
         <div
@@ -127,20 +134,24 @@ export default class Leaf extends Component {
                     height: '55px'
                 }}    
             />
-            <span><DigitalClock / ></span>
+            <span><DigitalClock /></span>
         </div>
-        <WindowWidth />
-        <Map center={mapCenter} style={{ height: '100%' }} zoom={zoom}>
+        <Map center={mapCenter} zoom={13} style={{ height: '100%' }}>
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-          {markers.map(position => (
-            <Marker key={position.lat}icon={divIcon()} position={position} />
+          {busmarkers.map((bus) => (
+            <Marker key={bus.num} icon={divIcon({className: 'leaflet-div-icon bus-div-icon', html: 'bus'})} position={bus.pos} />
           ))}
-          {busmarkers.map(position => (
-            <Marker key={position.lat} icon={divIcon({className: 'leaflet-div-icon bus-div-icon', html: 'bus'})} position={position} />
+
+          {markers.map(bike => (
+            <Marker key={bike.num} icon={divIcon()} position={bike.pos} />
           ))}
-          {polylines.map(positions => (
+
+          {windmarkers.map(board => (
+            <Marker key={board.num} icon={divIcon({className: 'leaflet-div-icon wind-div-icon'})} position={board.pos} />
+          ))}          
+          {/* {polylines.map(positions => (
             <Polyline positions={positions} />
-          ))}
+          ))} */}
           {markerCluster && (
             <MarkerCluster key="cluster">
               {markerCluster.map(position => (

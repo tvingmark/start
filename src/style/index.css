@@ -71,9 +71,15 @@ ul.menu li a {
 }
 
 .bus-div-icon {
-background: #9aa1db !important;
-border: 1px solid #E9BEE4!important;
-z-index: 100000000;
+    background: #9aa1db !important;
+    border: 1px solid #E9BEE4!important;
+    z-index: 100000000;
+}
+
+.wind-div-icon {
+    background: #fff9b2 !important;
+    border: 1px solid #E9BEE4!important;
+    z-index: 100000000;
 }
 
 .leaflet-pane.leaflet-tile-pane {
