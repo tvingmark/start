@@ -13,7 +13,6 @@ import WorkerFetch from '../data/fetch.worker'
 
 import DigitalClock from '../components/clock'
 import WindowWidth from '../components/wwidth'
-import BusMarker from '../components/Markers/'
 
 import route from '../data/long-route';
 import hopp01 from '../data/hopp'
